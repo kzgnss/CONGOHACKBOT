@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prédicteur de Jeux IA - Congo</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .console-box {
+      font-family: monospace;
+      background-color: #1a1a1a;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 0 20px #00ff88;
+      color: #00ff88;
+      height: 250px;
+      overflow-y: auto;
+    }
+    .loading-screen {
+      font-family: monospace;
+      background: #000;
+      color: #00ff88;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      flex-direction: column;
+      z-index: 50;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
+    .hidden-screen {
+      display: none;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+  <div id="loading" class="loading-screen">
+    <p>Chargement... Veuillez patienter pendant que nous préparons votre expérience.</p>
+  </div>
+
+  <div id="mainContent" class="hidden-screen">
+    <header class="w-full bg-gray-800 p-4 flex justify-between items-center">
+      <h1 class="text-xl font-bold text-green-400">Prédicteur IA 1xBet</h1>
+      <nav class="space-x-4">
+        <a href="#how" class="hover:text-green-400">Comment ça marche</a>
+        <a href="#games" class="hover:text-green-400">Jeux</a>
+        <a href="#start" class="hover:text-green-400">Commencer</a>
+      </nav>
+    </header>
+
+    <section class="min-h-screen flex flex-col items-center justify-center px-4 text-center">
+      <h2 class="text-3xl md:text-5xl font-bold mb-6">Gagnez de l'argent réel avec les prédictions IA</h2>
+      <p class="max-w-xl mb-8 text-gray-300">Rejoignez des milliers de Congolais utilisant notre IA intelligente pour gagner aux jeux comme Aviator, Mines et Penalty. 98% de précision, prédictions en temps réel et retraits rapides !</p>
+      <button id="startButton" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-xl text-lg transition">Commencer à Gagner</button>
+      <div id="errorBox" class="hidden bg-red-600 p-6 rounded-xl max-w-md mx-auto mt-6">
+        <h2 class="text-xl font-bold mb-2">⚠️ Compte Non Trouvé</h2>
+        <p class="mb-4">Il semble que vous ne soyez pas encore inscrit. Créez un nouveau compte 1xBet et déposez des fonds pour accéder aux prédictions.</p>
+        <p class="text-lg mb-4 text-yellow-400">Utilisez le code promo spécial : <strong>KNB777</strong></p>
+        <a href="https://affpa.top/L?tag=d_2843259m_97c_&site=2843259&ad=97&r=registration" target="_blank" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded-lg transition">
+          S'inscrire sur 1xBet
+        </a>
+      </div>
+    </section>
+
+    <section class="bg-gray-800 py-12 px-6 text-center">
+      <h3 class="text-2xl font-bold text-green-400 mb-6">Top Gagnants d'Aujourd'hui (FCFA)</h3>
+      <div class="grid md:grid-cols-2 gap-4 text-left max-w-4xl mx-auto text-sm text-green-300">
+        <p>👤 ID Utilisateur: 1218473422 – 1 200 000 FCFA</p>
+        <p>👤 ID Utilisateur: 9912384741 – 985 000 FCFA</p>
+        <p>👤 ID Utilisateur: 3099234822 – 865 000 FCFA</p>
+        <p>👤 ID Utilisateur: 1187339121 – 740 000 FCFA</p>
+        <p>👤 ID Utilisateur: 4412900113 – 670 000 FCFA</p>
+        <p>👤 ID Utilisateur: 8283721091 – 640 000 FCFA</p>
+        <p>👤 ID Utilisateur: 7751937742 – 500 000 FCFA</p>
+        <p>👤 ID Utilisateur: 5554921811 – 480 000 FCFA</p>
+        <p>👤 ID Utilisateur: 1983238742 – 420 000 FCFA</p>
+        <p>👤 ID Utilisateur: 3377749301 – 390 000 FCFA</p>
+      </div>
+    </section>
+
+    <section id="games" class="bg-gray-800 py-12 px-6 text-center">
+      <h3 class="text-2xl font-bold text-green-400 mb-6">Jeux Pris en Charge</h3>
+      <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div class="bg-gray-700 p-6 rounded-xl shadow-lg">
+          <h4 class="text-xl font-bold mb-2">🎮 Aviator</h4>
+          <p class="text-gray-300">Prévoyez quand encaisser avant que l'avion ne s'envole ! Notre IA repère les tendances en temps réel.</p>
+        </div>
+        <div class="bg-gray-700 p-6 rounded-xl shadow-lg">
+          <h4 class="text-xl font-bold mb-2">💣 Mines</h4>
+          <p class="text-gray-300">Évitez les bombes, ramassez les gains. Notre système découvre des chemins à faible risque pour un profit maximal.</p>
+        </div>
+        <div class="bg-gray-700 p-6 rounded-xl shadow-lg">
+          <h4 class="text-xl font-bold mb-2">🥅 Penalty</h4>
+          <p class="text-gray-300">Sachez où tirer ou plonger. Battez le gardien avec des prédictions basées sur les données.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="how" class="bg-gray-900 py-12 px-6 text-center">
+      <h3 class="text-2xl font-bold text-green-400 mb-6">Comment Ça Marche</h3>
+      <div class="max-w-3xl mx-auto space-y-4 text-gray-300">
+        <p>📡 Notre IA analyse les données de jeu en direct et les résultats passés 24h/24.</p>
+        <p>💡 Elle identifie les motifs qui mènent à des gains réguliers.</p>
+        <p>📲 Vous recevez des prédictions fiables en temps réel — directement sur votre appareil.</p>
+      </div>
+    </section>
+
+    <section class="bg-black py-12 px-6 text-center">
+      <h3 class="text-xl font-bold text-green-400 mb-4">[ Journal de la Console ]</h3>
+      <div class="console-box max-w-3xl mx-auto text-left" id="console">
+        <p>[INFO] Service de prédiction actif ✅</p>
+      </div>
+    </section>
+
+    <footer class="text-center text-gray-500 text-sm py-6">
+      © 2025 Prédicteur IA. Non affilié à 1xBet. Utilisez avec responsabilité.
+    </footer>
+  </div>
+
+  <script>
+    setTimeout(() => {
+      document.getElementById("loading").classList.add("hidden-screen");
+      document.getElementById("mainContent").classList.remove("hidden-screen");
+    }, 3000);
+
+    document.getElementById("startButton").addEventListener("click", () => {
+      document.getElementById("errorBox").classList.remove("hidden");
+    });
+  </script>
+</body>
+</html>
