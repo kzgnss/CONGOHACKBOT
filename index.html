@@ -2,134 +2,331 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prédicteur de Jeux IA</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>Accès privé au programme de prédiction</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    .console-box {
-      font-family: monospace;
-      background-color: #1a1a1a;
-      padding: 1rem;
-      border-radius: 0.5rem;
-      box-shadow: 0 0 20px #00ff88;
-      color: #00ff88;
-      height: 250px;
-      overflow-y: auto;
+    :root {
+      --bg: #020617;
+      --card: #020617;
+      --accent: #facc15;
+      --accent-soft: rgba(250, 204, 21, 0.12);
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --danger: #f97373;
     }
-    .loading-screen {
-      font-family: monospace;
-      background: #000;
-      color: #00ff88;
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
+      color: var(--text-main);
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      flex-direction: column;
-      z-index: 50;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
+      padding: 16px;
     }
-    .hidden-screen {
-      display: none;
+
+    .page {
+      width: 100%;
+      max-width: 520px;
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(250, 204, 21, 0.10), transparent 55%),
+                  #020617;
+      border-radius: 24px;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      box-shadow: 0 22px 40px rgba(0, 0, 0, 0.6);
+      padding: 22px 20px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .badge-geo {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.2);
+    }
+
+    .timer-wrapper {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: var(--text-muted);
+    }
+
+    .pill strong {
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h1 span.icon {
+      font-size: 1.6rem;
+    }
+
+    .subtitle {
+      margin: 0 0 14px;
+      font-size: 0.93rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .highlight {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .steps {
+      margin: 14px 0 16px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .steps-title {
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 6px;
+      font-size: 0.86rem;
+    }
+
+    .steps ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .steps li {
+      margin-bottom: 4px;
+      display: flex;
+      gap: 6px;
+      align-items: flex-start;
+    }
+
+    .steps li span.bullet {
+      font-size: 0.9rem;
+      margin-top: 1px;
+    }
+
+    .cta-btn {
+      width: 100%;
+      margin-top: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 14px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #facc15, #eab308);
+      color: #020617;
+      font-weight: 600;
+      font-size: 0.96rem;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      box-shadow: 0 16px 30px rgba(250, 204, 21, 0.35);
+      text-decoration: none;
+    }
+
+    .cta-btn span.icon {
+      font-size: 1.1rem;
+    }
+
+    .cta-btn:disabled {
+      opacity: 0.6;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .note {
+      margin-top: 8px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .note strong {
+      color: #f97373;
+    }
+
+    footer {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 0.7rem;
+      color: var(--text-muted);
     }
   </style>
 </head>
-<body class="bg-gray-900 text-white font-sans">
-  <div id="loading" class="loading-screen">
-    <p>Chargement... Veuillez patienter pendant que nous préparons votre expérience.</p>
-  </div>
-
-  <div id="mainContent" class="hidden-screen">
-    <header class="w-full bg-gray-800 p-4 flex justify-between items-center">
-      <h1 class="text-xl font-bold text-green-400">Prédicteur IA WinWin</h1>
-      <nav class="space-x-4">
-        <a href="#how" class="hover:text-green-400">Comment ça marche</a>
-        <a href="#games" class="hover:text-green-400">Jeux</a>
-        <a href="#start" class="hover:text-green-400">Commencer</a>
-      </nav>
-    </header>
-
-    <section class="min-h-screen flex flex-col items-center justify-center px-4 text-center">
-      <h2 class="text-3xl md:text-5xl font-bold mb-6">Gagnez jusqu’à 100 000 FCFA par jour grâce aux prédictions IA basées sur la technologie ChatGPT 🤖 </h2>
-      <p class="max-w-xl mb-8 text-gray-300">Rejoignez des milliers de personnes au Cameroun, au Congo et au Sénégal qui utilisent notre IA intelligente pour gagner aux jeux comme Aviator, Mines et Penalty. 🎯
-Précision de 98%, prédictions en temps réel et retraits rapides garantis !</p>
-      <button id="startButton" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-xl text-lg transition">Commencer à Gagner</button>
-      <div id="errorBox" class="hidden bg-red-600 p-6 rounded-xl max-w-md mx-auto mt-6">
-        <h2 class="text-xl font-bold mb-2">⚠️ Compte Non Trouvé</h2>
-        <p class="mb-4">Il semble que vous ne soyez pas encore inscrit. Créez un nouveau compte WinWin et déposez des fonds pour accéder aux prédictions.</p>
-        <p class="text-lg mb-4 text-yellow-400">Utilisez le code promo spécial : <strong>AFR77</strong></p>
-        <a href="https://track.cpalink.co/click?pid=12287&offer_id=1188" target="_blank" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded-lg transition">
-          S'inscrire sur WinWin
-        </a>
-      </div>
-    </section>
-
-    <section class="bg-gray-800 py-12 px-6 text-center">
-      <h3 class="text-2xl font-bold text-green-400 mb-6">Top Gagnants d'Aujourd'hui (FCFA)</h3>
-      <div class="grid md:grid-cols-2 gap-4 text-left max-w-4xl mx-auto text-sm text-green-300">
-        <p>👤 ID Utilisateur: 1218473422 – 1 200 000 FCFA</p>
-        <p>👤 ID Utilisateur: 9912384741 – 985 000 FCFA</p>
-        <p>👤 ID Utilisateur: 3099234822 – 865 000 FCFA</p>
-        <p>👤 ID Utilisateur: 1187339121 – 740 000 FCFA</p>
-        <p>👤 ID Utilisateur: 4412900113 – 670 000 FCFA</p>
-        <p>👤 ID Utilisateur: 8283721091 – 640 000 FCFA</p>
-        <p>👤 ID Utilisateur: 7751937742 – 500 000 FCFA</p>
-        <p>👤 ID Utilisateur: 5554921811 – 480 000 FCFA</p>
-        <p>👤 ID Utilisateur: 1983238742 – 420 000 FCFA</p>
-        <p>👤 ID Utilisateur: 3377749301 – 390 000 FCFA</p>
-      </div>
-    </section>
-
-    <section id="games" class="bg-gray-800 py-12 px-6 text-center">
-      <h3 class="text-2xl font-bold text-green-400 mb-6">Jeux Pris en Charge</h3>
-      <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-        <div class="bg-gray-700 p-6 rounded-xl shadow-lg">
-          <h4 class="text-xl font-bold mb-2">🎮 Aviator</h4>
-          <p class="text-gray-300">Prévoyez quand encaisser avant que l'avion ne s'envole ! Notre IA repère les tendances en temps réel.</p>
+<body>
+  <div class="page">
+    <section class="card">
+      <div class="card-header">
+        <div class="badge-geo">
+          <span class="badge-dot"></span>
+          🇨🇩 Congo · Kinshasa · Accès privé
         </div>
-        <div class="bg-gray-700 p-6 rounded-xl shadow-lg">
-          <h4 class="text-xl font-bold mb-2">💣 Mines</h4>
-          <p class="text-gray-300">Évitez les bombes, ramassez les gains. Notre système découvre des chemins à faible risque pour un profit maximal.</p>
-        </div>
-        <div class="bg-gray-700 p-6 rounded-xl shadow-lg">
-          <h4 class="text-xl font-bold mb-2">🥅 Penalty</h4>
-          <p class="text-gray-300">Sachez où tirer ou plonger. Battez le gardien avec des prédictions basées sur les données.</p>
+        <div class="timer-wrapper">
+          <div class="pill">
+            ⏳ <span id="timer-label">Temps restant</span> :
+            <strong id="timer">05:00</strong>
+          </div>
+          <div class="pill">
+            🎟️ Places restantes :
+            <strong id="seats-count">11</strong>
+          </div>
         </div>
       </div>
-    </section>
 
-    <section id="how" class="bg-gray-900 py-12 px-6 text-center">
-      <h3 class="text-2xl font-bold text-green-400 mb-6">Comment Ça Marche</h3>
-      <div class="max-w-3xl mx-auto space-y-4 text-gray-300">
-        <p>📡 Notre IA analyse les données de jeu en direct et les résultats passés 24h/24.</p>
-        <p>💡 Elle identifie les motifs qui mènent à des gains réguliers.</p>
-        <p>📲 Vous recevez des prédictions fiables en temps réel — directement sur votre appareil.</p>
+      <h1>
+        <span class="icon">🔐</span>
+        Accès privé au programme de prédiction
+      </h1>
+
+      <p class="subtitle">
+        Offre réservée aux joueurs de <span class="highlight">Kinshasa</span>.  
+        Seuls <span class="highlight">11 comptes</span> peuvent encore être activés pour recevoir
+        les signaux du programme. Quand le temps est écoulé, les places se ferment.
+      </p>
+
+      <div class="steps">
+        <div class="steps-title">Comment obtenir ton accès maintenant :</div>
+        <ul>
+          <li>
+            <span class="bullet">1️⃣</span>
+            <span>Clique sur le bouton ci-dessous et crée ton compte avec ton vrai numéro et email.</span>
+          </li>
+          <li>
+            <span class="bullet">2️⃣</span>
+            <span>Valide ton inscription et connecte-toi au site du bookmaker.</span>
+          </li>
+          <li>
+            <span class="bullet">3️⃣</span>
+            <span>Une fois inscrit, suis les instructions pour activer ton accès au programme de prédiction.</span>
+          </li>
+        </ul>
       </div>
-    </section>
 
-    <section class="bg-black py-12 px-6 text-center">
-      <h3 class="text-xl font-bold text-green-400 mb-4">[ Journal de la Console ]</h3>
-      <div class="console-box max-w-3xl mx-auto text-left" id="console">
-        <p>[INFO] Service de prédiction actif ✅</p>
-      </div>
-    </section>
+      <!-- ЗАМЕНИ href на свой реф-линк -->
+      <a href="https://your-registration-link.com"
+         id="cta-btn"
+         class="cta-btn"
+         target="_blank"
+         rel="noopener noreferrer">
+        <span class="icon">🚀</span>
+        <span>Je veux m’inscrire maintenant</span>
+      </a>
 
-    <footer class="text-center text-gray-500 text-sm py-6">
-      © 2025 Prédicteur IA. Non affilié à WinWin. Utilisez avec responsabilité.
-    </footer>
+      <p class="note" id="urgency-text">
+        ⏰ Les places diminuent automatiquement pendant le compte à rebours.
+        Quand il n’y a plus de place, tu devras attendre le prochain groupe.
+      </p>
+
+      <footer>
+        © <span id="year"></span> Programme de prédiction · Accès privé pour Congo – Kinshasa
+      </footer>
+    </section>
   </div>
 
   <script>
-    setTimeout(() => {
-      document.getElementById("loading").classList.add("hidden-screen");
-      document.getElementById("mainContent").classList.remove("hidden-screen");
-    }, 3000);
+    // année dans le footer
+    document.getElementById("year").textContent = new Date().getFullYear();
 
-    document.getElementById("startButton").addEventListener("click", () => {
-      document.getElementById("errorBox").classList.remove("hidden");
-    });
+    const totalSeconds = 5 * 60; // 5 minutes
+    let secondsLeft = totalSeconds;
+
+    const timerEl = document.getElementById("timer");
+    const timerLabelEl = document.getElementById("timer-label");
+    const seatsEl = document.getElementById("seats-count");
+    const ctaBtn = document.getElementById("cta-btn");
+    const urgencyText = document.getElementById("urgency-text");
+
+    const initialSeats = 11;
+    const minSeats = 3;
+
+    function updateUI() {
+      // timer
+      const minutes = Math.floor(secondsLeft / 60);
+      const secs = secondsLeft % 60;
+      timerEl.textContent = `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+
+      // places restantes — плавно уменьшаются с 11 до 3
+      const ratio = secondsLeft / totalSeconds;
+      const seats = Math.max(
+        minSeats,
+        Math.ceil(initialSeats * ratio)
+      );
+      seatsEl.textContent = seats;
+    }
+
+    updateUI();
+
+    const interval = setInterval(() => {
+      secondsLeft--;
+
+      if (secondsLeft <= 0) {
+        secondsLeft = 0;
+        clearInterval(interval);
+        updateUI();
+        timerLabelEl.textContent = "Temps écoulé";
+        urgencyText.innerHTML =
+          "⚠️ Le temps est terminé. Si une place se libère, elle pourra être rouverte plus tard. " +
+          "Rafraîchis la page pour vérifier de nouveau.";
+        // Кнопку можем оставить активной, чтобы человек всё равно мог регаться
+        return;
+      }
+
+      updateUI();
+    }, 1000);
   </script>
 </body>
 </html>
