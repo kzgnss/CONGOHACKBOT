@@ -112,7 +112,7 @@
     }
 
     .subtitle {
-      margin: 0 0 14px;
+      margin: 0 0 8px;
       font-size: 0.93rem;
       color: var(--text-muted);
       line-height: 1.6;
@@ -123,8 +123,20 @@
       font-weight: 600;
     }
 
+    .promo {
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+    }
+
+    .seats-info {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
     .steps {
-      margin: 14px 0 16px;
+      margin: 10px 0 16px;
       padding: 10px 12px;
       border-radius: 14px;
       background: rgba(15, 23, 42, 0.96);
@@ -222,7 +234,7 @@
           </div>
           <div class="pill">
             🎟️ Places restantes :
-            <strong id="seats-count">11</strong>
+            <strong id="seats-count">30</strong>
           </div>
         </div>
       </div>
@@ -234,8 +246,14 @@
 
       <p class="subtitle">
         Offre réservée aux joueurs de <span class="highlight">Kinshasa</span>.  
-        Seuls <span class="highlight">11 comptes</span> peuvent encore être activés pour recevoir
-        les signaux du programme. Quand le temps est écoulé, les places se ferment.
+        Pour activer ton accès, tu dois t’inscrire avec le code promo
+        <span class="promo">KNB777</span> pendant la création du compte.
+      </p>
+
+      <p class="seats-info" id="seats-info">
+        Places totales : <span class="highlight">150</span> ·
+        déjà prises : <span class="highlight">120</span> ·
+        <span class="highlight" id="dynamic-left">30</span> dernières places sont libérées pendant ce compte à rebours.
       </p>
 
       <div class="steps">
@@ -243,7 +261,10 @@
         <ul>
           <li>
             <span class="bullet">1️⃣</span>
-            <span>Clique sur le bouton ci-dessous et crée ton compte avec ton vrai numéro et email.</span>
+            <span>
+              Clique sur le bouton ci-dessous, crée ton compte avec tes vraies infos
+              et entre le code promo <span class="promo">KNB777</span> à l’inscription.
+            </span>
           </li>
           <li>
             <span class="bullet">2️⃣</span>
@@ -251,7 +272,7 @@
           </li>
           <li>
             <span class="bullet">3️⃣</span>
-            <span>Une fois inscrit, suis les instructions pour activer ton accès au programme de prédiction.</span>
+            <span>Après l’inscription, suis les instructions pour activer ton accès au programme de prédiction.</span>
           </li>
         </ul>
       </div>
@@ -267,8 +288,9 @@
       </a>
 
       <p class="note" id="urgency-text">
-        ⏰ Les places diminuent automatiquement pendant le compte à rebours.
-        Quand il n’y a plus de place, tu devras attendre le prochain groupe.
+        ⏰ Les <span class="highlight">30 dernières places</span> disparaissent automatiquement pendant le compte à rebours.  
+        <strong>Important :</strong> ton accès n’est validé que si tu utilises le code promo
+        <span class="promo">KNB777</span> à l’inscription.
       </p>
 
       <footer>
@@ -278,7 +300,7 @@
   </div>
 
   <script>
-    // année dans le footer
+    // année footer
     document.getElementById("year").textContent = new Date().getFullYear();
 
     const totalSeconds = 5 * 60; // 5 minutes
@@ -287,25 +309,30 @@
     const timerEl = document.getElementById("timer");
     const timerLabelEl = document.getElementById("timer-label");
     const seatsEl = document.getElementById("seats-count");
-    const ctaBtn = document.getElementById("cta-btn");
+    const dynamicLeftEl = document.getElementById("dynamic-left");
     const urgencyText = document.getElementById("urgency-text");
 
-    const initialSeats = 11;
-    const minSeats = 3;
+    const totalSeats = 150;
+    const takenSeats = 120;
+    const startSeats = totalSeats - takenSeats; // 30
+    const minSeats = 0; // к концу таймера может стать 0
 
     function updateUI() {
-      // timer
+      // таймер
       const minutes = Math.floor(secondsLeft / 60);
       const secs = secondsLeft % 60;
       timerEl.textContent = `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
 
-      // places restantes — плавно уменьшаются с 11 до 3
-      const ratio = secondsLeft / totalSeconds;
-      const seats = Math.max(
+      // сколько мест ушло
+      const elapsed = totalSeconds - secondsLeft;
+      const secondsPerSeat = totalSeconds / startSeats; // 300 / 30 = 10 секунд на 1 место
+      let seatsLeft = Math.max(
         minSeats,
-        Math.ceil(initialSeats * ratio)
+        startSeats - Math.floor(elapsed / secondsPerSeat)
       );
-      seatsEl.textContent = seats;
+
+      seatsEl.textContent = seatsLeft;
+      dynamicLeftEl.textContent = seatsLeft;
     }
 
     updateUI();
@@ -318,10 +345,12 @@
         clearInterval(interval);
         updateUI();
         timerLabelEl.textContent = "Temps écoulé";
+
         urgencyText.innerHTML =
-          "⚠️ Le temps est terminé. Si une place se libère, elle pourra être rouverte plus tard. " +
-          "Rafraîchis la page pour vérifier de nouveau.";
-        // Кнопку можем оставить активной, чтобы человек всё равно мог регаться
+          "⚠️ Le temps est terminé et les dernières places sont presque toutes prises. " +
+          "S’il reste une place libérée, tu pourras la voir en rechargeant la page. " +
+          "<br><br><strong>N’oublie pas :</strong> l’accès n’est possible qu’avec le code promo " +
+          '<span class=\"promo\">KNB777</span> à l’inscription.';
         return;
       }
 
